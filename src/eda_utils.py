@@ -1,12 +1,50 @@
+from os import path
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 def load_data(path):
-    df = pd.read_csv(path)
-    print(f"Shape: {df.shape}")
-    return df
+    """
+    Load CSV file safely.
+    """
+
+    try:
+        df = pd.read_csv(path)
+
+        logging.info(
+            f"Dataset loaded successfully: {path}"
+        )
+
+        logging.info(
+            f"Shape: {df.shape}"
+        )
+
+        return df
+
+    except FileNotFoundError:
+        logging.error(
+            f"File not found: {path}"
+        )
+        raise
+
+    except pd.errors.EmptyDataError:
+        logging.error(
+            f"File is empty: {path}"
+        )
+        raise
+
+    except Exception as e:
+        logging.error(
+            f"Unexpected error loading file: {e}"
+        )
+        raise
 
 
 def dataset_overview(df):
